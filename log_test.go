@@ -16,6 +16,9 @@ func ReadStdout(stdoutWriter *os.File, stdoutReader *os.File) string {
 }
 
 var _ = Describe("Log", func() {
+	BeforeEach(func() {
+		GetLogManager().WipeConfig()
+	})
 	Describe("LogManager", func() {
 		var oldStdout *os.File
 		var stdoutWriter *os.File
@@ -38,12 +41,26 @@ var _ = Describe("Log", func() {
 					Expect(stdout).To(ContainSubstring("[TEST] test message other test message 123\n"))
 				})
 			})
+			When("the env is muted", func() {
+				BeforeEach(func() {
+					config := NewLogManagerConfigBuilder().WithMutedEnv("TEST").Build()
+					GetLogManager().InjectConfig(config)
+				})
+				It("does not log the message", func() {
+					GetLogManager().Log("TEST", "test message")
+					stdout := ReadStdout(stdoutWriter, stdoutReader)
+					Expect(stdout).To(Equal(""))
+				})
+			})
 		})
 		Describe("::LogRed", func() {
 			It("logs the message in color", func() {
 				GetLogManager().LogRed("TEST", "test message")
 				stdout := ReadStdout(stdoutWriter, stdoutReader)
 				Expect(stdout).To(ContainSubstring("[TEST] \x1b[31mtest message\x1b[0m\n"))
+			})
+			When("the env is muted", func() {
+
 			})
 		})
 		Describe("::LogGreen", func() {
