@@ -76,12 +76,11 @@ var _ = Describe("Log", func() {
 			})
 			When("the env is one of the designated envs", func() {
 				BeforeEach(func() {
+					config := NewLogManagerConfigBuilder().WithDecorator("server", WrapGreen).Build()
+					GetLogManager().InjectConfig(config)
+					log.Env = "SERVER"
 				})
 				It("formats the env with the designated color", func() {
-					logManagerConfig := NewLogManagerConfig()
-					logManagerConfig.DecoratorByEnv["server"] = WrapGreen
-					GetLogManager().InjectConfig(logManagerConfig)
-					log.Env = "SERVER"
 					Expect(log.formatEnv()).To(Equal("\x1b[32m[SERVER]\x1b[0m"))
 				})
 			})

@@ -23,9 +23,15 @@ func GetLogManager() *LogManager {
 }
 
 func (lm *LogManager) InjectConfig(config *LogManagerConfig) {
+	configBuilder := NewLogManagerConfigBuilder().FromConfig(&lm.Config).WithConfig(config)
 	lm.mu.Lock()
-	config.NormalizeConfig()
-	lm.Config = *config
+	lm.Config = *configBuilder.Build()
+	lm.mu.Unlock()
+}
+
+func (lm *LogManager) WipeConfig() {
+	lm.mu.Lock()
+	lm.Config = *NewLogManagerConfig()
 	lm.mu.Unlock()
 }
 
