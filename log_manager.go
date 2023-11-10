@@ -24,6 +24,7 @@ func GetLogManager() *LogManager {
 
 func (lm *LogManager) InjectConfig(config *LogManagerConfig) {
 	lm.mu.Lock()
+	config.NormalizeConfig()
 	lm.Config = *config
 	lm.mu.Unlock()
 }
