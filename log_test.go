@@ -47,7 +47,7 @@ var _ = Describe("Log", func() {
 					GetLogManager().InjectConfig(config)
 				})
 				It("does not log the message", func() {
-					GetLogManager().Log("TEST", "test message")
+					GetLogManager().Log("test", "test message")
 					stdout := ReadStdout(stdoutWriter, stdoutReader)
 					Expect(stdout).To(Equal(""))
 				})

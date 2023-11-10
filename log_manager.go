@@ -2,6 +2,7 @@ package log
 
 import (
 	"fmt"
+	"strings"
 	"sync"
 )
 
@@ -47,7 +48,7 @@ func (lm *LogManager) canPrintInEnv(env string, msgs ...interface{}) bool {
 	// 2. the runtime environment (i.e. test, prod, etc.)
 	// TODO: rename one of these envs to avoid confusion
 
-	if lm.Config.MutedEnvs.Has(env) {
+	if lm.Config.MutedEnvs.Has(strings.ToUpper(env)) {
 		return false
 	}
 	for _, msg := range msgs {
