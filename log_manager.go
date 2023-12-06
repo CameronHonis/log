@@ -6,6 +6,20 @@ import (
 	"sync"
 )
 
+type LogManagerI interface {
+	InjectConfig(config *LogManagerConfig)
+	WipeConfig()
+	Log(env string, msgs ...interface{})
+	LogRed(env string, msgs ...interface{})
+	LogGreen(env string, msgs ...interface{})
+	LogBlue(env string, msgs ...interface{})
+	LogYellow(env string, msgs ...interface{})
+	LogMagenta(env string, msgs ...interface{})
+	LogCyan(env string, msgs ...interface{})
+	LogOrange(env string, msgs ...interface{})
+	LogBrown(env string, msgs ...interface{})
+}
+
 var logManager *LogManager
 
 type LogManager struct {
