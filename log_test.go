@@ -17,9 +17,9 @@ func ReadStdout(stdoutWriter *os.File, stdoutReader *os.File) string {
 
 var _ = Describe("Log", func() {
 	BeforeEach(func() {
-		GetLogManager().WipeConfig()
+		GetLogService().WipeConfig()
 	})
-	Describe("LogManager", func() {
+	Describe("LogService", func() {
 		var oldStdout *os.File
 		var stdoutWriter *os.File
 		var stdoutReader *os.File
@@ -30,24 +30,24 @@ var _ = Describe("Log", func() {
 		})
 		Describe("::Log", func() {
 			It("logs the message", func() {
-				GetLogManager().Log("TEST", "test message")
+				GetLogService().Log("TEST", "test message")
 				stdout := ReadStdout(stdoutWriter, stdoutReader)
 				Expect(stdout).To(ContainSubstring("[TEST] test message\n"))
 			})
 			When("multiple strings are passed in", func() {
 				It("logs the message", func() {
-					GetLogManager().Log("TEST", "test message", " other test message", " 123")
+					GetLogService().Log("TEST", "test message", " other test message", " 123")
 					stdout := ReadStdout(stdoutWriter, stdoutReader)
 					Expect(stdout).To(ContainSubstring("[TEST] test message other test message 123\n"))
 				})
 			})
 			When("the env is muted", func() {
 				BeforeEach(func() {
-					config := NewLogManagerConfigBuilder().WithMutedEnv("TEST").Build()
-					GetLogManager().InjectConfig(config)
+					config := NewConfigBuilder().WithMutedEnv("TEST").Build()
+					GetLogService().InjectConfig(config)
 				})
 				It("does not log the message", func() {
-					GetLogManager().Log("test", "test message")
+					GetLogService().Log("test", "test message")
 					stdout := ReadStdout(stdoutWriter, stdoutReader)
 					Expect(stdout).To(Equal(""))
 				})
@@ -55,7 +55,7 @@ var _ = Describe("Log", func() {
 		})
 		Describe("::LogRed", func() {
 			It("logs the message in color", func() {
-				GetLogManager().LogRed("TEST", "test message")
+				GetLogService().LogRed("TEST", "test message")
 				stdout := ReadStdout(stdoutWriter, stdoutReader)
 				Expect(stdout).To(ContainSubstring("[TEST] \x1b[31mtest message\x1b[0m\n"))
 			})
@@ -65,7 +65,7 @@ var _ = Describe("Log", func() {
 		})
 		Describe("::LogGreen", func() {
 			It("logs the message in color", func() {
-				GetLogManager().LogGreen("TEST", "test message")
+				GetLogService().LogGreen("TEST", "test message")
 				stdout := ReadStdout(stdoutWriter, stdoutReader)
 				Expect(stdout).To(ContainSubstring("[TEST] \x1b[32mtest message\x1b[0m\n"))
 			})
@@ -74,7 +74,7 @@ var _ = Describe("Log", func() {
 			_ = stdoutWriter.Close()
 			_ = stdoutReader.Close()
 			os.Stdout = oldStdout
-			GetLogManager().LogGreen("TEST", "resetting stdout")
+			GetLogService().LogGreen("TEST", "resetting stdout")
 		})
 	})
 	Describe("Log", func() {
@@ -93,8 +93,8 @@ var _ = Describe("Log", func() {
 			})
 			When("the env is one of the designated envs", func() {
 				BeforeEach(func() {
-					config := NewLogManagerConfigBuilder().WithDecorator("server", WrapGreen).Build()
-					GetLogManager().InjectConfig(config)
+					config := NewConfigBuilder().WithDecorator("server", WrapGreen).Build()
+					GetLogService().InjectConfig(config)
 					log.Env = "SERVER"
 				})
 				It("formats the env with the designated color", func() {

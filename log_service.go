@@ -7,7 +7,7 @@ import (
 )
 
 type LogManagerI interface {
-	InjectConfig(config *LogManagerConfig)
+	InjectConfig(config *Config)
 	WipeConfig()
 	Log(env string, msgs ...interface{})
 	LogRed(env string, msgs ...interface{})
@@ -20,43 +20,43 @@ type LogManagerI interface {
 	LogBrown(env string, msgs ...interface{})
 }
 
-var logManager *LogManager
+var logService *LogService
 
-type LogManager struct {
+type LogService struct {
 	mu     sync.Mutex
-	Config LogManagerConfig
+	Config Config
 }
 
-func GetLogManager() *LogManager {
-	if logManager == nil {
-		logManager = &LogManager{
+func GetLogService() *LogService {
+	if logService == nil {
+		logService = &LogService{
 			mu:     sync.Mutex{},
-			Config: *NewLogManagerConfig(),
+			Config: *NewConfig(),
 		}
 	}
-	return logManager
+	return logService
 }
 
-func (lm *LogManager) InjectConfig(config *LogManagerConfig) {
-	configBuilder := NewLogManagerConfigBuilder().FromConfig(&lm.Config).WithConfig(config)
+func (lm *LogService) InjectConfig(config *Config) {
+	configBuilder := NewConfigBuilder().FromConfig(&lm.Config).WithConfig(config)
 	lm.mu.Lock()
 	lm.Config = *configBuilder.Build()
 	lm.mu.Unlock()
 }
 
-func (lm *LogManager) WipeConfig() {
+func (lm *LogService) WipeConfig() {
 	lm.mu.Lock()
-	lm.Config = *NewLogManagerConfig()
+	lm.Config = *NewConfig()
 	lm.mu.Unlock()
 }
 
-func (lm *LogManager) logLogWithLock(log *Log) {
+func (lm *LogService) logLogWithLock(log *Log) {
 	lm.mu.Lock()
 	fmt.Println(log.String())
 	lm.mu.Unlock()
 }
 
-func (lm *LogManager) canPrintInEnv(env string, msgs ...interface{}) bool {
+func (lm *LogService) canPrintInEnv(env string, msgs ...interface{}) bool {
 	// NOTE: env means two things here:
 	// 1. the environment in which the log was created
 	// 2. the runtime environment (i.e. test, prod, etc.)
@@ -78,7 +78,7 @@ func (lm *LogManager) canPrintInEnv(env string, msgs ...interface{}) bool {
 	return true
 }
 
-func (lm *LogManager) Log(env string, msgs ...interface{}) {
+func (lm *LogService) Log(env string, msgs ...interface{}) {
 	if !lm.canPrintInEnv(env, msgs...) {
 		return
 	}
@@ -87,7 +87,7 @@ func (lm *LogManager) Log(env string, msgs ...interface{}) {
 	lm.logLogWithLock(log)
 }
 
-func (lm *LogManager) LogRed(env string, msgs ...interface{}) {
+func (lm *LogService) LogRed(env string, msgs ...interface{}) {
 	if !lm.canPrintInEnv(env, msgs...) {
 		return
 	}
@@ -95,7 +95,7 @@ func (lm *LogManager) LogRed(env string, msgs ...interface{}) {
 	lm.logLogWithLock(log)
 }
 
-func (lm *LogManager) LogGreen(env string, msgs ...interface{}) {
+func (lm *LogService) LogGreen(env string, msgs ...interface{}) {
 	if !lm.canPrintInEnv(env, msgs...) {
 		return
 	}
@@ -103,7 +103,7 @@ func (lm *LogManager) LogGreen(env string, msgs ...interface{}) {
 	lm.logLogWithLock(log)
 }
 
-func (lm *LogManager) LogBlue(env string, msgs ...interface{}) {
+func (lm *LogService) LogBlue(env string, msgs ...interface{}) {
 	if !lm.canPrintInEnv(env, msgs...) {
 		return
 	}
@@ -111,7 +111,7 @@ func (lm *LogManager) LogBlue(env string, msgs ...interface{}) {
 	lm.logLogWithLock(log)
 }
 
-func (lm *LogManager) LogYellow(env string, msgs ...interface{}) {
+func (lm *LogService) LogYellow(env string, msgs ...interface{}) {
 	if !lm.canPrintInEnv(env, msgs...) {
 		return
 	}
@@ -119,7 +119,7 @@ func (lm *LogManager) LogYellow(env string, msgs ...interface{}) {
 	lm.logLogWithLock(log)
 }
 
-func (lm *LogManager) LogMagenta(env string, msgs ...interface{}) {
+func (lm *LogService) LogMagenta(env string, msgs ...interface{}) {
 	if !lm.canPrintInEnv(env, msgs...) {
 		return
 	}
@@ -127,7 +127,7 @@ func (lm *LogManager) LogMagenta(env string, msgs ...interface{}) {
 	lm.logLogWithLock(log)
 }
 
-func (lm *LogManager) LogCyan(env string, msgs ...interface{}) {
+func (lm *LogService) LogCyan(env string, msgs ...interface{}) {
 	if !lm.canPrintInEnv(env, msgs...) {
 		return
 	}
@@ -135,7 +135,7 @@ func (lm *LogManager) LogCyan(env string, msgs ...interface{}) {
 	lm.logLogWithLock(log)
 }
 
-func (lm *LogManager) LogOrange(env string, msgs ...interface{}) {
+func (lm *LogService) LogOrange(env string, msgs ...interface{}) {
 	if !lm.canPrintInEnv(env, msgs...) {
 		return
 	}
@@ -143,7 +143,7 @@ func (lm *LogManager) LogOrange(env string, msgs ...interface{}) {
 	lm.logLogWithLock(log)
 }
 
-func (lm *LogManager) LogBrown(env string, msgs ...interface{}) {
+func (lm *LogService) LogBrown(env string, msgs ...interface{}) {
 	if !lm.canPrintInEnv(env, msgs...) {
 		return
 	}

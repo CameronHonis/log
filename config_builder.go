@@ -2,34 +2,34 @@ package log
 
 import "strings"
 
-type LogManagerConfigBuilder struct {
-	Config *LogManagerConfig
+type ConfigBuilder struct {
+	Config *Config
 }
 
-func NewLogManagerConfigBuilder() *LogManagerConfigBuilder {
-	return &LogManagerConfigBuilder{
-		Config: NewLogManagerConfig(),
+func NewConfigBuilder() *ConfigBuilder {
+	return &ConfigBuilder{
+		Config: NewConfig(),
 	}
 }
 
-func (builder *LogManagerConfigBuilder) WithDecorator(env string, decorator func(string) string) *LogManagerConfigBuilder {
+func (builder *ConfigBuilder) WithDecorator(env string, decorator func(string) string) *ConfigBuilder {
 	env = strings.ToUpper(env)
 	builder.Config.DecoratorByEnv[env] = decorator
 	return builder
 }
 
-func (builder *LogManagerConfigBuilder) WithMutedEnv(env string) *LogManagerConfigBuilder {
+func (builder *ConfigBuilder) WithMutedEnv(env string) *ConfigBuilder {
 	env = strings.ToUpper(env)
 	builder.Config.MutedEnvs.Add(env)
 	return builder
 }
 
-func (builder *LogManagerConfigBuilder) FromConfig(config *LogManagerConfig) *LogManagerConfigBuilder {
+func (builder *ConfigBuilder) FromConfig(config *Config) *ConfigBuilder {
 	builder.Config = config
 	return builder
 }
 
-func (builder *LogManagerConfigBuilder) WithConfig(config *LogManagerConfig) *LogManagerConfigBuilder {
+func (builder *ConfigBuilder) WithConfig(config *Config) *ConfigBuilder {
 	for env, decorator := range config.DecoratorByEnv {
 		builder.WithDecorator(env, decorator)
 	}
@@ -39,6 +39,6 @@ func (builder *LogManagerConfigBuilder) WithConfig(config *LogManagerConfig) *Lo
 	return builder
 }
 
-func (builder *LogManagerConfigBuilder) Build() *LogManagerConfig {
+func (builder *ConfigBuilder) Build() *Config {
 	return builder.Config
 }

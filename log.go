@@ -15,7 +15,7 @@ type Log struct {
 
 func (l *Log) formatEnv() string {
 	upperEnv := strings.ToUpper(l.Env)
-	envWrapper, ok := GetLogManager().Config.DecoratorByEnv[upperEnv]
+	envWrapper, ok := GetLogService().Config.DecoratorByEnv[upperEnv]
 	if ok {
 		return envWrapper(fmt.Sprintf("[%s]", upperEnv))
 	}

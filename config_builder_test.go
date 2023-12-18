@@ -16,16 +16,16 @@ var _ = Describe("ConfigBuilder", func() {
 		})
 	})
 	Describe("::WithConfig", func() {
-		var configBuilder *LogManagerConfigBuilder
-		var configToMerge *LogManagerConfig
+		var configBuilder *ConfigBuilder
+		var configToMerge *Config
 		BeforeEach(func() {
-			configBuilder = NewLogManagerConfigBuilder()
+			configBuilder = NewConfigBuilder()
 			configBuilder.WithDecorator("test", WrapRed)
 			configBuilder.WithMutedEnv("muted_env")
 			Expect(configBuilder.Config).ToNot(BeNil())
 			Expect(configBuilder.Config.DecoratorByEnv["TEST"]).ToNot(BeNil())
 			Expect(configBuilder.Config.MutedEnvs.Has("MUTED_ENV")).To(BeTrue())
-			configToMergeBuilder := NewLogManagerConfigBuilder()
+			configToMergeBuilder := NewConfigBuilder()
 			configToMergeBuilder.WithDecorator("TEST2", WrapGreen)
 			configToMergeBuilder.WithMutedEnv("MUTED_ENV2")
 			configToMerge = configToMergeBuilder.Build()
