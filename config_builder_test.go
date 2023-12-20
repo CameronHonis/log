@@ -17,7 +17,7 @@ var _ = Describe("ConfigBuilder", func() {
 	})
 	Describe("::WithConfig", func() {
 		var configBuilder *ConfigBuilder
-		var configToMerge *Config
+		var configToMerge *LoggerConfig
 		BeforeEach(func() {
 			configBuilder = NewConfigBuilder()
 			configBuilder.WithDecorator("test", WrapRed)

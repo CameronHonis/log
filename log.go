@@ -13,20 +13,19 @@ type Log struct {
 	Options      []LogOption
 }
 
-func (l *Log) formatEnv() string {
-	upperEnv := strings.ToUpper(l.Env)
-	envWrapper, ok := GetLogService().Config.DecoratorByEnv[upperEnv]
-	if ok {
-		return envWrapper(fmt.Sprintf("[%s]", upperEnv))
+func (l *Log) formatEnv(config *LoggerConfig) string {
+	envWrapper := config.GetEnvDecorator(l.Env)
+	if envWrapper != nil {
+		return envWrapper(fmt.Sprintf("[%s]", strings.ToUpper(l.Env)))
 	}
-	return fmt.Sprintf("[%s]", upperEnv)
+	return fmt.Sprintf("[%s]", strings.ToUpper(l.Env))
 }
 
-func (l *Log) String() string {
+func (l *Log) String(config *LoggerConfig) string {
 	if l.ColorWrapper == nil {
-		return fmt.Sprintf("%s %s", l.formatEnv(), l.Msg)
+		return fmt.Sprintf("%s %s", l.formatEnv(config), l.Msg)
 	} else {
-		return fmt.Sprintf("%s %s", l.formatEnv(), l.ColorWrapper(l.Msg))
+		return fmt.Sprintf("%s %s", l.formatEnv(config), l.ColorWrapper(l.Msg))
 	}
 }
 

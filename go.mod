@@ -4,7 +4,11 @@ go 1.18
 
 replace github.com/CameronHonis/set => ../set
 
+replace github.com/CameronHonis/service => ../service
+
 require (
+	github.com/CameronHonis/marker v0.0.0-20231220043644-4b47686a2d7b // indirect
+	github.com/CameronHonis/service v0.0.0-20231219045318-badbff1b45c2 // indirect
 	github.com/CameronHonis/set v0.0.0-20231110043107-dace21619137 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 // indirect

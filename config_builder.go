@@ -3,12 +3,12 @@ package log
 import "strings"
 
 type ConfigBuilder struct {
-	Config *Config
+	Config *LoggerConfig
 }
 
 func NewConfigBuilder() *ConfigBuilder {
 	return &ConfigBuilder{
-		Config: NewConfig(),
+		Config: NewLoggerConfig(),
 	}
 }
 
@@ -24,12 +24,12 @@ func (builder *ConfigBuilder) WithMutedEnv(env string) *ConfigBuilder {
 	return builder
 }
 
-func (builder *ConfigBuilder) FromConfig(config *Config) *ConfigBuilder {
+func (builder *ConfigBuilder) FromConfig(config *LoggerConfig) *ConfigBuilder {
 	builder.Config = config
 	return builder
 }
 
-func (builder *ConfigBuilder) WithConfig(config *Config) *ConfigBuilder {
+func (builder *ConfigBuilder) WithConfig(config *LoggerConfig) *ConfigBuilder {
 	for env, decorator := range config.DecoratorByEnv {
 		builder.WithDecorator(env, decorator)
 	}
@@ -39,6 +39,6 @@ func (builder *ConfigBuilder) WithConfig(config *Config) *ConfigBuilder {
 	return builder
 }
 
-func (builder *ConfigBuilder) Build() *Config {
+func (builder *ConfigBuilder) Build() *LoggerConfig {
 	return builder.Config
 }
