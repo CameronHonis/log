@@ -9,6 +9,7 @@ import (
 )
 
 type LoggerServiceI interface {
+	ServiceI
 	Log(env string, msgs ...interface{})
 	LogRed(env string, msgs ...interface{})
 	LogGreen(env string, msgs ...interface{})
