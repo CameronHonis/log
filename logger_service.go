@@ -22,7 +22,7 @@ type LoggerServiceI interface {
 }
 
 type LoggerService struct {
-	Service[*LoggerConfig]
+	Service
 
 	__dependencies__ Marker
 
