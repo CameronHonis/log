@@ -8,6 +8,7 @@ import (
 	"sync"
 )
 
+//go:generate mockgen -destination mock/logger_service_mock.go . LoggerServiceI
 type LoggerServiceI interface {
 	service.ServiceI
 	Log(env string, msgs ...interface{})
