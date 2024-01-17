@@ -2,14 +2,14 @@ package log
 
 import (
 	"fmt"
-	. "github.com/CameronHonis/marker"
-	. "github.com/CameronHonis/service"
+	"github.com/CameronHonis/marker"
+	"github.com/CameronHonis/service"
 	"strings"
 	"sync"
 )
 
 type LoggerServiceI interface {
-	ServiceI
+	service.ServiceI
 	Log(env string, msgs ...interface{})
 	LogRed(env string, msgs ...interface{})
 	LogGreen(env string, msgs ...interface{})
@@ -22,11 +22,11 @@ type LoggerServiceI interface {
 }
 
 type LoggerService struct {
-	Service
+	service.Service
 
-	__dependencies__ Marker
+	__dependencies__ marker.Marker
 
-	__state__ Marker
+	__state__ marker.Marker
 	mu        sync.Mutex
 }
 
@@ -34,7 +34,7 @@ func NewLoggerService(config *LoggerConfig) *LoggerService {
 	loggerService := &LoggerService{
 		mu: sync.Mutex{},
 	}
-	loggerService.Service = *NewService(loggerService, config)
+	loggerService.Service = *service.NewService(loggerService, config)
 	return loggerService
 }
 
