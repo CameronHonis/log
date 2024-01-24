@@ -6,10 +6,12 @@ import (
 	"strings"
 )
 
+type Decorator func(string) string
+
 type Log struct {
 	Env          string
 	Msg          string
-	ColorWrapper func(string) string
+	ColorWrapper Decorator
 	Options      []LogOption
 }
 

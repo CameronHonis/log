@@ -2,34 +2,34 @@ package log
 
 import "fmt"
 
-func WrapGreen(msg string) string {
+var WrapGreen = func(msg string) string {
 	return fmt.Sprintf("\x1b[32m%s\x1b[0m", msg)
 }
 
-func WrapRed(msg string) string {
+var WrapRed = func(msg string) string {
 	return fmt.Sprintf("\x1b[31m%s\x1b[0m", msg)
 }
 
-func WrapYellow(msg string) string {
+var WrapYellow = func(msg string) string {
 	return fmt.Sprintf("\x1b[33m%s\x1b[0m", msg)
 }
 
-func WrapBlue(msg string) string {
+var WrapBlue = func(msg string) string {
 	return fmt.Sprintf("\x1b[34m%s\x1b[0m", msg)
 }
 
-func WrapMagenta(msg string) string {
+var WrapMagenta = func(msg string) string {
 	return fmt.Sprintf("\x1b[35m%s\x1b[0m", msg)
 }
 
-func WrapCyan(msg string) string {
+var WrapCyan = func(msg string) string {
 	return fmt.Sprintf("\x1b[36m%s\x1b[0m", msg)
 }
 
-func WrapOrange(msg string) string {
+var WrapOrange = func(msg string) string {
 	return fmt.Sprintf("\x1b[38;5;208m%s\x1b[0m", msg)
 }
 
-func WrapBrown(msg string) string {
+var WrapBrown = func(msg string) string {
 	return fmt.Sprintf("\x1b[38;5;130m%s\x1b[0m", msg)
 }

@@ -25,7 +25,7 @@ var _ = Describe("Log", func() {
 			ColorWrapper: nil,
 			Options:      make([]LogOption, 0),
 		}
-		loggerConfig = NewLoggerConfig()
+		loggerConfig = NewLoggerConfig(make([]DecoratorRule, 0), make([]MutedRule, 0))
 	})
 	Describe("::formatEnv", func() {
 		It("formats the env", func() {
@@ -61,7 +61,7 @@ var _ = Describe("LoggerService", func() {
 	var stdoutReader *os.File
 	var loggerService *LoggerService
 	BeforeEach(func() {
-		config := NewLoggerConfig()
+		config := NewLoggerConfig(make([]DecoratorRule, 0), make([]MutedRule, 0))
 		loggerService = NewLoggerService(config)
 		oldStdout = os.Stdout
 		stdoutReader, stdoutWriter, _ = os.Pipe()

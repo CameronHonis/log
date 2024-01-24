@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/CameronHonis/marker"
 	"github.com/CameronHonis/service"
-	"strings"
 	"sync"
 )
 
@@ -49,7 +48,7 @@ func (lm *LoggerService) canPrintInEnv(env string, msgs ...interface{}) bool {
 	// NOTE: env refers to the interprocess environment, not anything related to the host machine environment.
 	// TODO: consider renaming env to something better
 
-	if lm.Config().(*LoggerConfig).MutedEnvs.Has(strings.ToUpper(env)) {
+	if lm.Config().(*LoggerConfig).IsEnvMuted(env) {
 		return false
 	}
 	for _, msg := range msgs {

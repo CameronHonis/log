@@ -8,19 +8,34 @@ type ConfigBuilder struct {
 
 func NewConfigBuilder() *ConfigBuilder {
 	return &ConfigBuilder{
-		Config: NewLoggerConfig(),
+		Config: NewLoggerConfig(make([]DecoratorRule, 0), make([]MutedRule, 0)),
 	}
 }
 
-func (builder *ConfigBuilder) WithDecorator(env string, decorator func(string) string) *ConfigBuilder {
-	env = strings.ToUpper(env)
-	builder.Config.DecoratorByEnv[env] = decorator
+func (builder *ConfigBuilder) WithDecorator(env string, decorator Decorator) *ConfigBuilder {
+	rule := func(_env string) Decorator {
+		if strings.ToUpper(_env) == strings.ToUpper(env) {
+			return decorator
+		}
+		return nil
+	}
+	return builder.WithDecoratorRule(rule)
+}
+
+func (builder *ConfigBuilder) WithDecoratorRule(rule DecoratorRule) *ConfigBuilder {
+	builder.Config.DecoratorRules = append(builder.Config.DecoratorRules, rule)
 	return builder
 }
 
 func (builder *ConfigBuilder) WithMutedEnv(env string) *ConfigBuilder {
-	env = strings.ToUpper(env)
-	builder.Config.MutedEnvs.Add(env)
+	rule := func(_env string) bool {
+		return strings.ToUpper(env) == strings.ToUpper(_env)
+	}
+	return builder.WithMutedRule(rule)
+}
+
+func (builder *ConfigBuilder) WithMutedRule(rule MutedRule) *ConfigBuilder {
+	builder.Config.MutedRules = append(builder.Config.MutedRules, rule)
 	return builder
 }
 
@@ -30,11 +45,11 @@ func (builder *ConfigBuilder) FromConfig(config *LoggerConfig) *ConfigBuilder {
 }
 
 func (builder *ConfigBuilder) WithConfig(config *LoggerConfig) *ConfigBuilder {
-	for env, decorator := range config.DecoratorByEnv {
-		builder.WithDecorator(env, decorator)
+	for _, rule := range config.DecoratorRules {
+		builder.WithDecoratorRule(rule)
 	}
-	for _, mutedEnv := range config.MutedEnvs.Flatten() {
-		builder.WithMutedEnv(mutedEnv)
+	for _, rule := range config.MutedRules {
+		builder.WithMutedRule(rule)
 	}
 	return builder
 }
