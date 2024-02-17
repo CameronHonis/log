@@ -7,7 +7,6 @@ import (
 	"sync"
 )
 
-//go:generate mockgen -destination mock/logger_service_mock.go . LoggerServiceI
 type LoggerServiceI interface {
 	service.ServiceI
 	Log(env string, msgs ...interface{})
@@ -40,8 +39,12 @@ func NewLoggerService(config *LoggerConfig) *LoggerService {
 
 func (lm *LoggerService) logLogWithLock(log *Log, config *LoggerConfig) {
 	lm.mu.Lock()
+	defer lm.mu.Unlock()
+
+	if config.IsMuted {
+		return
+	}
 	fmt.Println(log.String(config))
-	lm.mu.Unlock()
 }
 
 func (lm *LoggerService) canPrintInEnv(env string, msgs ...interface{}) bool {

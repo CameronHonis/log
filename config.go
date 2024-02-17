@@ -11,12 +11,14 @@ type MutedRule func(string) bool
 
 type LoggerConfig struct {
 	service.ConfigI
+	IsMuted        bool
 	DecoratorRules []DecoratorRule
 	MutedRules     []MutedRule
 }
 
-func NewLoggerConfig(decoratorRules []DecoratorRule, mutedRules []MutedRule) *LoggerConfig {
+func NewLoggerConfig(isMuted bool, decoratorRules []DecoratorRule, mutedRules []MutedRule) *LoggerConfig {
 	return &LoggerConfig{
+		IsMuted:        isMuted,
 		DecoratorRules: decoratorRules,
 		MutedRules:     mutedRules,
 	}

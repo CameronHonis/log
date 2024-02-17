@@ -8,8 +8,13 @@ type ConfigBuilder struct {
 
 func NewConfigBuilder() *ConfigBuilder {
 	return &ConfigBuilder{
-		Config: NewLoggerConfig(make([]DecoratorRule, 0), make([]MutedRule, 0)),
+		Config: NewLoggerConfig(false, make([]DecoratorRule, 0), make([]MutedRule, 0)),
 	}
+}
+
+func (builder *ConfigBuilder) WithIsMuted(isMuted bool) *ConfigBuilder {
+	builder.Config.IsMuted = isMuted
+	return builder
 }
 
 func (builder *ConfigBuilder) WithDecorator(env string, decorator Decorator) *ConfigBuilder {

@@ -25,7 +25,7 @@ var _ = Describe("Log", func() {
 			ColorWrapper: nil,
 			Options:      make([]LogOption, 0),
 		}
-		loggerConfig = NewLoggerConfig(make([]DecoratorRule, 0), make([]MutedRule, 0))
+		loggerConfig = NewLoggerConfig(false, make([]DecoratorRule, 0), make([]MutedRule, 0))
 	})
 	Describe("::formatEnv", func() {
 		It("formats the env", func() {
@@ -61,7 +61,7 @@ var _ = Describe("LoggerService", func() {
 	var stdoutReader *os.File
 	var loggerService *LoggerService
 	BeforeEach(func() {
-		config := NewLoggerConfig(make([]DecoratorRule, 0), make([]MutedRule, 0))
+		config := NewLoggerConfig(false, make([]DecoratorRule, 0), make([]MutedRule, 0))
 		loggerService = NewLoggerService(config)
 		oldStdout = os.Stdout
 		stdoutReader, stdoutWriter, _ = os.Pipe()
@@ -83,6 +83,17 @@ var _ = Describe("LoggerService", func() {
 		When("the env is muted", func() {
 			BeforeEach(func() {
 				config := NewConfigBuilder().WithMutedEnv("TEST").Build()
+				loggerService = NewLoggerService(config)
+			})
+			It("does not log the message", func() {
+				loggerService.Log("test", "test message")
+				stdout := ReadStdout(stdoutWriter, stdoutReader)
+				Expect(stdout).To(Equal(""))
+			})
+		})
+		When("the config is set to muted", func() {
+			BeforeEach(func() {
+				config := NewConfigBuilder().WithIsMuted(true).Build()
 				loggerService = NewLoggerService(config)
 			})
 			It("does not log the message", func() {

@@ -24,7 +24,7 @@ var _ = Describe("Config", func() {
 					return nil
 				}
 				rules := []log.DecoratorRule{rule0, rule1}
-				config = log.NewLoggerConfig(rules, make([]log.MutedRule, 0))
+				config = log.NewLoggerConfig(false, rules, make([]log.MutedRule, 0))
 			})
 			When("no rules specify the decorator for the env", func() {
 				It("returns nil", func() {
